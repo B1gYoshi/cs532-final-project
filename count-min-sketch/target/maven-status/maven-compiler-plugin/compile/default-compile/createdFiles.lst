@@ -1,2 +1,6 @@
-countminsketch/FraudDetectionJob.class
-countminsketch/FraudDetector.class
+countminsketch/DetailedTransaction.class
+countminsketch/DetailedFraudDetectionJob.class
+countminsketch/DetailedAlertSink.class
+countminsketch/DetailedAlert.class
+countminsketch/DetailedFraudDetector.class
+countminsketch/DetailedTransactionSource.class
