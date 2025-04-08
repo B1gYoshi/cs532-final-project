@@ -12,7 +12,7 @@ public class PurchaseSource implements SourceFunction<Purchase> {
         long timestamp = 0L;
 
         // manually generated transactions to verify fraud detection logic
-        Purchase[] transactions = {new Purchase("1", "product1", "Computer"), new Purchase("2", "product2", "Home&Kitchen")};
+        Purchase[] transactions = {new Purchase("1", "product1", "Computer"), new Purchase("2", "product2", "Home&Kitchen"), new Purchase("3", "product3", "category3"), new Purchase("4", "product4", "category4")};
         int transactionIndex = 0;
 
         while (running){
