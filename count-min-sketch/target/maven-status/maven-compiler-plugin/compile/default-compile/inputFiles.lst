@@ -1,2 +1,8 @@
+/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/DetailedFraudDetectionJob.java
+/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/DetailedFraudDetector.java
 /Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/FraudDetectionJob.java
+/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/DetailedAlert.java
+/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/DetailedTransaction.java
 /Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/FraudDetector.java
+/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/DetailedTransactionSource.java
+/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/DetailedAlertSink.java
