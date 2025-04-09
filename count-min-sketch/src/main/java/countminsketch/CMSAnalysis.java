@@ -20,17 +20,22 @@ public class CMSAnalysis extends ProcessFunction<CMSMergedResult, PurchaseAlert>
         PurchaseAlert alert = new PurchaseAlert();
 
         String[] categories = {"Computer", "Home&Kitchen", "category3", "category4"};
-        String resultString = "";
+        String popularCategory = "";
+        int popularCategoryCount = -1;
         int[] cmsMergedArr = cmsMergedResult.getCmsArrayMerged();
 
         for (String categoryStr : categories) {
             byte[] categoryBytes =categoryStr.getBytes();
             int hash = MurmurHash3.hash32x86(categoryBytes, 0, categoryBytes.length, 0);
             int cmsKey = Math.floorMod(hash, this.M);
-            resultString += categoryStr + ": " + cmsMergedArr[cmsKey] + ". ";
+
+            if (cmsMergedArr[cmsKey] > popularCategoryCount) {
+                popularCategoryCount = cmsMergedArr[cmsKey];
+                popularCategory = categoryStr;
+            }
         }
 
-        alert.setMessage("The counts are as follows. " + resultString);
+        alert.setMessage("The most popular category is " + popularCategory + " with count " + popularCategoryCount + ".");
 
         collector.collect(alert);
     }
