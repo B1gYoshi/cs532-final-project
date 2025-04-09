@@ -1,4 +1,4 @@
-package stream;
+package source;
 
 import org.apache.flink.annotation.Public;
 import org.apache.flink.streaming.api.functions.source.legacy.SourceFunction;

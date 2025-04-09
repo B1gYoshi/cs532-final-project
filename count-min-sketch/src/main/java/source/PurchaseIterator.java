@@ -1,4 +1,4 @@
-package stream;
+package source;
 
 import java.io.*;
 import java.util.Iterator;
@@ -37,6 +37,7 @@ public class PurchaseIterator implements Iterator<Purchase>, Serializable {
     }
 
     public Purchase next() {
+        // TODO: Add logic to change distribution by product category
         int index = random.nextInt(purchases.size());
         return purchases.get(index).copy();
     }
