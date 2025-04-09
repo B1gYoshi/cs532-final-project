@@ -1,2 +1,4 @@
-countminsketch/FraudDetectionJob.class
-countminsketch/FraudDetector.class
+countminsketch\FraudDetectionJob.class
+countminsketch\FraudDetector.class
+stream\Product.class
+stream\ProductIterator.class
