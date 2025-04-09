@@ -5,10 +5,10 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import java.util.Objects;
 
 
-public class Product {
+public class Purchase {
     @CsvBindByName(column = "product_id") public String productId;
     @CsvBindByName(column = "product_name") public String productName;
-    public String category;
+    @CsvBindByName(column = "category") public String category;
 
     @Override
     public boolean equals(Object object) {
@@ -18,7 +18,7 @@ public class Product {
         if (object == null || this.getClass() != object.getClass()) {
             return false;
         }
-        Product other = (Product)object;
+        Purchase other = (Purchase)object;
         return new EqualsBuilder()
             .append(productId, other.productId)
             .append(productName, other.productName)
