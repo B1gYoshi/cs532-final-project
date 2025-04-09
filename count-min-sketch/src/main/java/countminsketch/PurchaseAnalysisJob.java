@@ -1,6 +1,7 @@
 package countminsketch;
 
 import org.apache.flink.api.common.functions.RichMapFunction;
+import org.apache.flink.api.common.functions.RuntimeContext;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -8,6 +9,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -30,6 +32,7 @@ import java.util.Random;
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
         final int NUM_CORES = 10;
+        final int M = 20;
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(NUM_CORES);
@@ -38,17 +41,22 @@ public class PurchaseAnalysisJob {
                 .addSource(new PurchaseSource())
                 .name("transactions");
 
-        DataStream<PurchaseAlert> alerts = purchases
+        DataStream<CMSResult> cmsOutputs = purchases
                 .map(new RoundRobinKeySelector())
-                .keyBy( new KeySelector<Tuple2<Integer, Purchase>, Integer>() {
-                    @Override
-                    public Integer getKey(Tuple2<Integer, Purchase> value) {
-                        return value.f0;
-                    }
-                })
-                .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
-                .process(new CountMinSketch())
+                .keyBy((KeySelector<Tuple2<Integer, Purchase>, Integer>) value -> value.f0)
+                .window(SlidingProcessingTimeWindows.of(Time.seconds(10), Time.seconds(5)))
+                .process(new CountMinSketch(M))
                 .name("fraud-detector");
+
+        DataStream<CMSMergedResult> cmsMerged = cmsOutputs
+                .keyBy(CMSResult::getWindowTimestamp)
+                .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+                .process(new CMSMerge(M))
+                .name("merged-cms");
+
+        DataStream<PurchaseAlert> alerts = cmsMerged
+                .process(new CMSAnalysis(M))
+                .name("cms-results");
 
         alerts
                 .addSink(new SinkFunction<PurchaseAlert>() {
