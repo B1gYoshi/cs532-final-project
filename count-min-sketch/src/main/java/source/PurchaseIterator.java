@@ -1,14 +1,12 @@
 package source;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-
+import java.util.*;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class PurchaseIterator implements Iterator<Purchase>, Serializable {
-    private final List<Purchase> purchases;
+    private final List<String> categories;
+    private final Map<String, List<Purchase>> groups;
     private final Random random;
 
     public PurchaseIterator() {
@@ -22,10 +20,21 @@ public class PurchaseIterator implements Iterator<Purchase>, Serializable {
 
             // Parse CSV file rows into POJOs
             Reader in = new InputStreamReader(stream);
-            purchases = new CsvToBeanBuilder<Purchase>(in)
+            Iterator<Purchase> iter = new CsvToBeanBuilder<Purchase>(in)
                 .withType(Purchase.class)
                 .build()
-                .parse();
+                .iterator();
+
+            // Group purchases by category
+            groups = new HashMap<String, List<Purchase>>();
+            while (iter.hasNext()) {
+                Purchase purchase = iter.next();
+                List<Purchase> list = groups.computeIfAbsent(purchase.getCategory(), (key) -> new ArrayList<>());
+                list.add(purchase);
+            }
+
+            // Used to randomly choose category group
+            categories = new ArrayList<>(groups.keySet());
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -37,8 +46,13 @@ public class PurchaseIterator implements Iterator<Purchase>, Serializable {
     }
 
     public Purchase next() {
-        // TODO: Add logic to change distribution by product category
-        int index = random.nextInt(purchases.size());
-        return purchases.get(index).copy();
+        // TODO: Add logic to change distribution by product category,
+        // TODO: Should be able to manually configure some categories, and the rest are uniform
+        // TODO: Figure out if object should have 1 or multiple categories (split category along `|` and into capitalized words between those)
+
+        // Choose a category group, then a purchase in it
+        String category = categories.get(random.nextInt(categories.size()));
+        List<Purchase> group = groups.get(category);
+        return group.get(random.nextInt(group.size()));
     }
 }
