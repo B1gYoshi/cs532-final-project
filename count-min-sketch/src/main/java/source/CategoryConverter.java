@@ -13,7 +13,8 @@ public class CategoryConverter extends AbstractBeanField<String, String> {
         String[] parts = value.split("\\|");
         String last = parts[parts.length - 1]
             .replaceAll("([A-Z])(?=[A-Z][a-z])", "$1 ") // Handle acronyms, e.g. USBCharger -> USB Charger
-            .replace("&", " & ");                       // Handle ampersands, E.g. Lawn&Yard -> Lawn & Yard
+            .replace("&", " & ")
+            .replace(",", ", ");
 
         // Convert camel case to words joined by spaces
         String[] words = last.split("(?<=[a-z])(?=[A-Z])");

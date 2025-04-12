@@ -1,48 +1,62 @@
 package source;
 
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.apache.flink.configuration.YamlParserUtils;
 
 public class PurchaseIterator implements Iterator<Purchase>, Serializable {
-    private final List<String> categories;
+    private final Map<String, Double> weights;
     private final Map<String, List<Purchase>> groups;
     private final Random random;
 
     public PurchaseIterator() {
         random = new Random();
         try {
-            // Open CSV file
-            InputStream stream = getClass().getResourceAsStream("/amazon.csv");
-            if (stream == null) {
-                throw new IOException("Missing amazon.csv in resources folder");
+            // Load resource files
+            URL weightsUrl = getClass().getResource("/weights.yaml");
+            InputStream csvStream = getClass().getResourceAsStream("/amazon.csv");
+            if (weightsUrl == null || csvStream == null) {
+                throw new IOException("Missing files in resources folder");
             }
 
-            // Parse CSV file rows into POJOs
-            Reader reader = new InputStreamReader(stream);
-            List<Purchase> beans = new CsvToBeanBuilder<Purchase>(reader)
+            // Parse CSV rows and group by category
+            Reader reader = new InputStreamReader(csvStream);
+            groups = new CsvToBeanBuilder<Purchase>(reader)
                 .withType(Purchase.class)
                 .build()
-                .parse();
+                .parse()
+                .stream()
+                .collect(Collectors.groupingBy(Purchase::getCategory));
 
-            // Group purchases by category
-            groups = beans.stream().collect(Collectors.groupingBy(Purchase::getCategory));
-            categories = new ArrayList<>(groups.keySet());
+            // Parse weights assigned in yaml file
+            weights = new HashMap<>();
+            File weightsFile = new File(weightsUrl.getPath());
+            Map<String, Object> yaml = YamlParserUtils.loadYamlFile(weightsFile);
+            Double assigned = 0.0;
+            for (String category : yaml.keySet()) {
+                Double weight = (Double)yaml.get(category);
+                assigned += weight;
+                weights.put(category, weight);
+            }
+
+            // Set remaining unassigned weights uniformly
+            Double uniform = (1.0 - assigned) / (groups.size() - yaml.size());
+            for (String category : groups.keySet()) {
+                if (!yaml.containsKey(category)) {
+                    weights.put(category, uniform);
+                }
+            }
         }
-        catch (IOException e) {
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public Purchase next() {
-        // TODO: Add logic to change distribution by product category,
-        // TODO: Should be able to manually configure some categories, and the rest are uniform
-
-        // Choose a category group, then a purchase in it
-        String category = categories.get(random.nextInt(categories.size()));
-        List<Purchase> group = groups.get(category);
-        return group.get(random.nextInt(group.size())).copy();
+        return null;
     }
 
     public boolean hasNext() {
