@@ -1,11 +1,10 @@
 package source;
 
 import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.Objects;
-
 
 public class Purchase {
     @CsvBindByName(column = "product_id")
@@ -14,7 +13,7 @@ public class Purchase {
     @CsvBindByName(column = "product_name")
     private String productName;
 
-    @CsvBindByName(column = "category")
+    @CsvCustomBindByName(column = "Category", converter = CategoryConverter.class)
     private String category;
 
     public Purchase() {}

@@ -2,6 +2,7 @@ package source;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 public class PurchaseIterator implements Iterator<Purchase>, Serializable {
@@ -19,21 +20,14 @@ public class PurchaseIterator implements Iterator<Purchase>, Serializable {
             }
 
             // Parse CSV file rows into POJOs
-            Reader in = new InputStreamReader(stream);
-            Iterator<Purchase> iter = new CsvToBeanBuilder<Purchase>(in)
+            Reader reader = new InputStreamReader(stream);
+            List<Purchase> beans = new CsvToBeanBuilder<Purchase>(reader)
                 .withType(Purchase.class)
                 .build()
-                .iterator();
+                .parse();
 
             // Group purchases by category
-            groups = new HashMap<String, List<Purchase>>();
-            while (iter.hasNext()) {
-                Purchase purchase = iter.next();
-                List<Purchase> list = groups.computeIfAbsent(purchase.getCategory(), (key) -> new ArrayList<>());
-                list.add(purchase);
-            }
-
-            // Used to randomly choose category group
+            groups = beans.stream().collect(Collectors.groupingBy(Purchase::getCategory));
             categories = new ArrayList<>(groups.keySet());
         }
         catch (IOException e) {
@@ -41,18 +35,17 @@ public class PurchaseIterator implements Iterator<Purchase>, Serializable {
         }
     }
 
-    public boolean hasNext() {
-        return true;
-    }
-
     public Purchase next() {
         // TODO: Add logic to change distribution by product category,
         // TODO: Should be able to manually configure some categories, and the rest are uniform
-        // TODO: Figure out if object should have 1 or multiple categories (split category along `|` and into capitalized words between those)
 
         // Choose a category group, then a purchase in it
         String category = categories.get(random.nextInt(categories.size()));
         List<Purchase> group = groups.get(category);
-        return group.get(random.nextInt(group.size()));
+        return group.get(random.nextInt(group.size())).copy();
+    }
+
+    public boolean hasNext() {
+        return true;
     }
 }
