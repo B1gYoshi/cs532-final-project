@@ -1,4 +1,4 @@
-package source;
+package stream;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;

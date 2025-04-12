@@ -1,4 +1,4 @@
-package source;
+package stream;
 
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 

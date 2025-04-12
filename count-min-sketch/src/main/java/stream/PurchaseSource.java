@@ -1,4 +1,4 @@
-package source;
+package stream;
 
 import org.apache.flink.annotation.Public;
 import org.apache.flink.streaming.api.functions.source.legacy.SourceFunction;
@@ -10,10 +10,10 @@ public class PurchaseSource implements SourceFunction<Purchase> {
     @Override
     public void run(SourceContext<Purchase> context) throws Exception {
         // Pull purchases from iterator with delay
-        PurchaseIterator iter = new PurchaseIterator();
+        PurchaseGenerator generator = new PurchaseGenerator();
         while (running) {
             synchronized (context.getCheckpointLock()) {
-                context.collect(iter.next());
+                context.collect(generator.next());
             }
             Thread.sleep(100L);
         }
