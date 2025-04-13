@@ -13,32 +13,27 @@ public class PurchaseGenerator implements Serializable {
     private final Distribution<String> categoryDist;
     private final Random random;
 
-    public PurchaseGenerator() {
-        try {
-            // Load resource files
-            URL weightsUrl = getClass().getResource("/weights.yaml");
-            InputStream csvStream = getClass().getResourceAsStream("/amazon.csv");
-            if (weightsUrl == null || csvStream == null) {
-                throw new IOException("Missing files in resources folder");
-            }
-
-            // Parse CSV rows and group by category
-            Reader reader = new InputStreamReader(csvStream);
-            groups = new CsvToBeanBuilder<Purchase>(reader)
-                .withType(Purchase.class)
-                .build()
-                .parse()
-                .stream()
-                .collect(Collectors.groupingBy(Purchase::getCategory));
-
-            // Setup category distribution
-            File file = new File(weightsUrl.getPath());
-            categoryDist = new CustomDistribution().loadYaml(groups.keySet(), file);
-            random = new Random();
+    public PurchaseGenerator() throws Exception {
+        // Load resource files
+        URL weightsUrl = getClass().getResource("/weights.yaml");
+        InputStream csvStream = getClass().getResourceAsStream("/amazon.csv");
+        if (weightsUrl == null || csvStream == null) {
+            throw new IOException("Missing files in resources folder");
         }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
+        // Parse CSV rows and group by category
+        Reader reader = new InputStreamReader(csvStream);
+        groups = new CsvToBeanBuilder<Purchase>(reader)
+            .withType(Purchase.class)
+            .build()
+            .parse()
+            .stream()
+            .collect(Collectors.groupingBy(Purchase::getCategory));
+
+        // Setup category distribution
+        File file = new File(weightsUrl.getPath());
+        categoryDist = new CustomDistribution(groups.keySet(), file);
+        random = new Random();
     }
 
     public Purchase next() {

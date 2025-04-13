@@ -9,33 +9,23 @@ public class CustomDistribution implements Distribution<String> {
     private final HashMap<String, Double> explicit;
     private final Random random;
 
-    public CustomDistribution() {
+    public CustomDistribution(Collection<String> domain, File file) throws Exception {
+        // Load weights from config file
         explicit = new HashMap<>();
+        Map<String, Object> config = YamlParserUtils.loadYamlFile(file);
+        for (String category : config.keySet()) {
+            explicit.put(category, (Double)config.get(category));
+        }
+
+        // Separate elements with unspecified weight
         implicit = new ArrayList<>();
+        for (String category : domain) {
+            if (!explicit.containsKey(category)) {
+                implicit.add(category);
+            }
+        }
+
         random = new Random();
-    }
-
-    public CustomDistribution loadYaml(Collection<String> domain, File file) {
-        try {
-            // Load weights from config file
-            explicit.clear();
-            Map<String, Object> yaml = YamlParserUtils.loadYamlFile(file);
-            for (String category : YamlParserUtils.loadYamlFile(file).keySet()) {
-                explicit.put(category, (Double)yaml.get(category));
-            }
-
-            // Separate elements with unspecified weight
-            implicit.clear();
-            for (String category : domain) {
-                if (!explicit.containsKey(category)) {
-                    implicit.add(category);
-                }
-            }
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return this;
     }
 
     public String sample() {
