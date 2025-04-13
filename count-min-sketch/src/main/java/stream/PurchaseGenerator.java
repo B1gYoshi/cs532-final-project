@@ -14,11 +14,10 @@ public class PurchaseGenerator implements Serializable {
     private final Random random;
 
     public PurchaseGenerator() throws Exception {
-        // Load resource files
-        URL weightsUrl = getClass().getResource("/weights.yaml");
+        // Load product set
         InputStream csvStream = getClass().getResourceAsStream("/amazon.csv");
-        if (weightsUrl == null || csvStream == null) {
-            throw new IOException("Missing files in resources folder");
+        if (csvStream == null) {
+            throw new IOException("Missing amazon.csv in resources folder");
         }
 
         // Parse CSV rows and group by category
@@ -31,8 +30,7 @@ public class PurchaseGenerator implements Serializable {
             .collect(Collectors.groupingBy(Purchase::getCategory));
 
         // Setup category distribution
-        File file = new File(weightsUrl.getPath());
-        categoryDist = new CustomDistribution(groups.keySet(), file);
+        categoryDist = new CustomDistribution(groups.keySet());
         random = new Random();
     }
 
