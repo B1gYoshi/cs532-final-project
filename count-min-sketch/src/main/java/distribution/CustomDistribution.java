@@ -15,7 +15,7 @@ public class CustomDistribution implements Distribution<String> {
         random = new Random();
     }
 
-    public CustomDistribution fromYaml(Collection<String> domain, File file) {
+    public CustomDistribution loadYaml(Collection<String> domain, File file) {
         try {
             // Load weights from config file
             explicit.clear();
@@ -24,7 +24,7 @@ public class CustomDistribution implements Distribution<String> {
                 explicit.put(category, (Double)yaml.get(category));
             }
 
-            // Separate categories with unspecified weight
+            // Separate elements with unspecified weight
             implicit.clear();
             for (String category : domain) {
                 if (!explicit.containsKey(category)) {
@@ -46,6 +46,6 @@ public class CustomDistribution implements Distribution<String> {
                 return category;
             }
         }
-        return implicit.get(random.nextInt(implicit.size()));
+        return implicit.get(random.nextInt(implicit.size())); // Uniform over unspecified elements
     }
 }

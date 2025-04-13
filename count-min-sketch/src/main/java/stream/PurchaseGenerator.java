@@ -33,7 +33,7 @@ public class PurchaseGenerator implements Serializable {
 
             // Setup category distribution
             File file = new File(weightsUrl.getPath());
-            categoryDist = new CustomDistribution().fromYaml(groups.keySet(), file);
+            categoryDist = new CustomDistribution().loadYaml(groups.keySet(), file);
             random = new Random();
         }
         catch (Exception e) {
