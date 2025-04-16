@@ -1,23 +1,15 @@
 package countminsketch;
 
 import org.apache.flink.api.common.functions.RichMapFunction;
-import org.apache.flink.api.common.functions.RuntimeContext;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.KeyedProcessFunction;
-import org.apache.flink.streaming.api.functions.ProcessFunction;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
+import org.apache.flink.streaming.api.functions.sink.legacy.SinkFunction;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
-import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.flink.util.Collector;
-import org.apache.flink.api.common.state.ValueState;
-import org.apache.flink.api.common.state.ValueStateDescriptor;
-import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.tuple.Tuple2;
+import stream.Purchase;
+import stream.PurchaseSource;
 
 import java.time.Duration;
 import java.util.Random;
@@ -42,15 +34,15 @@ public class PurchaseAnalysisJob {
                 .name("transactions");
 
         DataStream<CMSResult> cmsOutputs = purchases
-                .map(new RoundRobinKeySelector())
+                .map(new RandomKeySelector(NUM_CORES))
                 .keyBy((KeySelector<Tuple2<Integer, Purchase>, Integer>) value -> value.f0)
-                .window(SlidingProcessingTimeWindows.of(Time.seconds(10), Time.seconds(5)))
+                .window(SlidingProcessingTimeWindows.of(Duration.ofSeconds(10), Duration.ofSeconds(5)))
                 .process(new CountMinSketch(M))
                 .name("fraud-detector");
 
         DataStream<CMSMergedResult> cmsMerged = cmsOutputs
                 .keyBy(CMSResult::getWindowTimestamp)
-                .window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+                .window(TumblingProcessingTimeWindows.of(Duration.ofSeconds(5)))
                 .process(new CMSMerge(M))
                 .name("merged-cms");
 
@@ -71,10 +63,19 @@ public class PurchaseAnalysisJob {
     }
 }
 
-class RoundRobinKeySelector extends RichMapFunction<Purchase, Tuple2<Integer, Purchase>> {
+class RandomKeySelector extends RichMapFunction<Purchase, Tuple2<Integer, Purchase>> {
+
+    private final int NUM_CORES;
+    private Random rand;
+
+    public RandomKeySelector (int NUM_CORES) {
+        this.NUM_CORES = NUM_CORES;
+        rand = new Random();
+    }
+
 
     @Override
     public Tuple2<Integer, Purchase> map(Purchase purchase) throws Exception {
-        return Tuple2.of(getRuntimeContext().getIndexOfThisSubtask(), purchase);
+        return Tuple2.of(rand.nextInt(NUM_CORES), purchase);
     }
 }
