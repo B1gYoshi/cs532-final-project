@@ -9,11 +9,14 @@ import java.io.IOException;
 public class PurchaseSource implements SourceFunction<Purchase> {
     private volatile boolean running = true;
 
+
     @Override
     public void run(SourceContext<Purchase> context) throws Exception {
         // Pull purchases from generator with delay
         PurchaseGenerator generator = new PurchaseGenerator();
+
         while (running) {
+            // Time measurement here
             synchronized (context.getCheckpointLock()) {
                 context.collect(generator.next());
             }
