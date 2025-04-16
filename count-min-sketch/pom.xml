@@ -65,6 +65,7 @@ under the License.
 			<version>${flink.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-clients</artifactId>
@@ -72,8 +73,13 @@ under the License.
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Add connector dependencies here. They must be in the default scope (compile). -->
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.7.1</version>
+		</dependency>
 
+		<!-- Add connector dependencies here. They must be in the default scope (compile). -->
 		<!-- Example:
 
 		<dependency>
