@@ -4,6 +4,8 @@ import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 
+import java.util.Set;
+
 
 // gets the merged CMS for all of the partitions
 // Somehow needs to figure out the most popular items
@@ -19,7 +21,7 @@ public class CMSAnalysis extends ProcessFunction<CMSMergedResult, PurchaseAlert>
     public void processElement(CMSMergedResult cmsMergedResult, ProcessFunction<CMSMergedResult, PurchaseAlert>.Context context, Collector<PurchaseAlert> collector) throws Exception {
         PurchaseAlert alert = new PurchaseAlert();
 
-        String[] categories = {"Computer", "Home&Kitchen", "category3", "category4"};
+        Set<String> categories = cmsMergedResult.getPopularCategoriesCandidates();
         String popularCategory = "";
         int popularCategoryCount = -1;
         int[] cmsMergedArr = cmsMergedResult.getCmsArrayMerged();
