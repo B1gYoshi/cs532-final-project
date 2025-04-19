@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
         final int NUM_CORES = 10;
-        final int M = 150;
+        final int M = 100;
         final int K = 5;
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();

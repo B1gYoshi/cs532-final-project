@@ -36,6 +36,7 @@ public class CountMinSketch extends ProcessWindowFunction<
 
         int[] cmsArray = new int[this.M];
         TreeSet<TreeSetEntry> topKCategories = new TreeSet<>();
+        Map<String, TreeSetEntry> categoriesInTreeSet = new HashMap<>();
 
         for (Tuple2<Integer, Purchase> purchase : elements) {
             String category = purchase.f1.getCategory();
@@ -45,11 +46,16 @@ public class CountMinSketch extends ProcessWindowFunction<
 
             TreeSetEntry newEntry = new TreeSetEntry(category, cmsArray[cmsKey]);
 
-            topKCategories.remove(newEntry);
+            if (categoriesInTreeSet.containsKey(category)) {
+                topKCategories.remove(categoriesInTreeSet.get(category));
+            }
+
             topKCategories.add(newEntry);
+            categoriesInTreeSet.put(category, newEntry);
 
             if (topKCategories.size() > K) {
-                topKCategories.pollFirst();
+                TreeSetEntry ts = topKCategories.pollFirst();
+                categoriesInTreeSet.remove(ts.getCategory());
             }
 
         }
@@ -77,6 +83,8 @@ class TreeSetEntry implements Comparable<TreeSetEntry> {
 
     @Override
     public int compareTo(TreeSetEntry other) {
+        if (this == other) return 0;
+
         int cmp = this.estimate - other.estimate;
         if (cmp == 0) {
             cmp = this.category.compareTo(other.category);
