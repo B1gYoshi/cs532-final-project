@@ -11,8 +11,13 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import stream.Purchase;
 import stream.PurchaseSource;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.Duration;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Skeleton code for the datastream walkthrough
@@ -24,7 +29,8 @@ import java.util.Random;
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
         final int NUM_CORES = 10;
-        final int M = 20;
+        final int M = 100;
+        final int K = 5;
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(NUM_CORES);
@@ -37,7 +43,7 @@ public class PurchaseAnalysisJob {
                 .map(new RandomKeySelector(NUM_CORES))
                 .keyBy((KeySelector<Tuple2<Integer, Purchase>, Integer>) value -> value.f0)
                 .window(SlidingProcessingTimeWindows.of(Duration.ofSeconds(10), Duration.ofSeconds(5)))
-                .process(new CountMinSketch(M))
+                .process(new CountMinSketch(M, K))
                 .name("fraud-detector");
 
         DataStream<CMSMergedResult> cmsMerged = cmsOutputs
