@@ -47,6 +47,19 @@ public class Sketch {
         }
     }
 
+    public void merge(Sketch other) {
+        if (other.width != this.width || other.depth != this.depth) {
+            throw new IllegalArgumentException("Sketches cannot be merged");
+        }
+
+        // Add corresponding entries
+        for (int i = 0; i < depth; i++) {
+            for (int j = 0; j < width; j++) {
+                sketch[i][j] += other.sketch[i][j];
+            }
+        }
+    }
+
     public void clear() {
         hotKeys.clear();
         for (int[] row : sketch) {
