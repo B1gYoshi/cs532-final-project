@@ -1,8 +1,7 @@
 package cms;
 
 import org.apache.commons.codec.digest.MurmurHash3;
-import java.util.Arrays;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Sketch {
     private final int width;                // Length of estimate arrays
@@ -26,6 +25,10 @@ public class Sketch {
         }
     }
 
+    public List<HotKey> getHotKeys() {
+        return new ArrayList<>(hotKeys);
+    }
+
     public void update(String key) {
         byte[] bytes = key.getBytes();
         int min = Integer.MAX_VALUE;
@@ -44,26 +47,6 @@ public class Sketch {
         hotKeys.add(hotKey);
         if (hotKeys.size() > maxHotKeys) {
             hotKeys.pollFirst();
-        }
-    }
-
-    public void merge(Sketch other) {
-        if (other.width != this.width || other.depth != this.depth) {
-            throw new IllegalArgumentException("Sketches cannot be merged");
-        }
-
-        // Add corresponding entries
-        for (int i = 0; i < depth; i++) {
-            for (int j = 0; j < width; j++) {
-                sketch[i][j] += other.sketch[i][j];
-            }
-        }
-    }
-
-    public void clear() {
-        hotKeys.clear();
-        for (int[] row : sketch) {
-            Arrays.fill(row, 0);
         }
     }
 }

@@ -1,8 +1,8 @@
 package cms;
 
 public class HotKey implements Comparable<HotKey> {
-    private final String key;
-    private final int estimate;
+    private String key;
+    private int estimate;
 
     public HotKey(String key, int estimate) {
         this.key = key;
@@ -13,8 +13,16 @@ public class HotKey implements Comparable<HotKey> {
         return key;
     }
 
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     public int getEstimate() {
         return estimate;
+    }
+
+    public void setEstimate(int estimate) {
+        this.estimate = estimate;
     }
 
     @Override
