@@ -1,5 +1,7 @@
 package cms;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class HotKey implements Comparable<HotKey> {
     private String key;
     private int estimate;
@@ -31,8 +33,17 @@ public class HotKey implements Comparable<HotKey> {
         if (keyComp == 0) {
             return 0;
         }
+
         // Compare estimate, break ties by key
         int estimateComp = Integer.compare(this.estimate, other.estimate);
         return estimateComp == 0 ? keyComp : estimateComp;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+            .append("key", key)
+            .append("estimate", estimate)
+            .toString();
     }
 }

@@ -10,6 +10,7 @@ public class Sketch {
     private final int[] seeds;
     private final int[][] sketch;
     private final TreeSet<HotKey> hotKeys;  // Top k keys by estimation
+    private long stamp;
 
     public Sketch(int width, int depth, int maxHotKeys) {
         this.width = width;
@@ -48,5 +49,13 @@ public class Sketch {
         if (hotKeys.size() > maxHotKeys) {
             hotKeys.pollFirst();
         }
+    }
+
+    public void setStamp(long stamp) {
+        this.stamp = stamp;
+    }
+
+    public long getStamp() {
+        return stamp;
     }
 }
