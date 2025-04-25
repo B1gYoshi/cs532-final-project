@@ -12,8 +12,8 @@ public class PurchaseTestJob {
             .name("purchases")
             .keyBy(Purchase::getProductId)
             .print()
-            .name("print-purchases");
+            .name("print");
 
-        env.execute("Purchase Test Job");
+        env.execute("purchase test job");
     }
 }

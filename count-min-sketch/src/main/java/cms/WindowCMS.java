@@ -23,6 +23,8 @@ public class WindowCMS extends ProcessAllWindowFunction<Purchase, Sketch, TimeWi
         for (Purchase purchase : elements) {
             sketch.update(purchase.getCategory());
         }
+
+        // Stamp and emit sketch
         sketch.setStamp(context.window().getStart());
         collector.collect(sketch);
     }
