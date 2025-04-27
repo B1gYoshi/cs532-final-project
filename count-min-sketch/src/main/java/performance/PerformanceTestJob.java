@@ -7,10 +7,12 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
+import org.apache.flink.api.common.functions.RichMapFunction;
 import stream.Purchase;
 import stream.PurchaseSource;
 
 import java.time.Duration;
+import java.util.Random; // Added missing import for Random
 
 /**
  * job for testing purchase analysis pipeline performance.
@@ -79,10 +81,13 @@ public class PerformanceTestJob {
         if (testSeconds > 0) {
             final Thread mainThread = Thread.currentThread();
             new Thread(() -> {
-                Thread.sleep(testSeconds * 1000);
-                System.out.println("\nTime limit reached");
-                mainThread.interrupt();
-
+                try {
+                    Thread.sleep(testSeconds * 1000);
+                    System.out.println("\nTime limit reached");
+                    mainThread.interrupt();
+                } catch (InterruptedException e) {
+                    System.err.println("Timeout thread interrupted: " + e.getMessage());
+                }
             }).start();
         }
         
@@ -91,3 +96,20 @@ public class PerformanceTestJob {
 
     }
 }
+
+class RandomKeySelector extends RichMapFunction<Purchase, Tuple2<Integer, Purchase>> {
+
+        private final int NUM_CORES;
+        private Random rand;
+    
+        public RandomKeySelector (int NUM_CORES) {
+            this.NUM_CORES = NUM_CORES;
+            rand = new Random();
+        }
+    
+    
+        @Override
+        public Tuple2<Integer, Purchase> map(Purchase purchase) throws Exception {
+            return Tuple2.of(rand.nextInt(NUM_CORES), purchase);
+        }
+    }

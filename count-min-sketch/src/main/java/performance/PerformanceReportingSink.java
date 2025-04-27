@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * sink for performance metrics.
  */
-public class PerformanceReportingSink<T> extends SinkFunction<T>{
+public class PerformanceReportingSink<T> implements SinkFunction<T> {
     
     private String testName;
     private String outputFile;
@@ -33,7 +33,7 @@ public class PerformanceReportingSink<T> extends SinkFunction<T>{
         this.reportInterval = reportInterval;
     }
     
-    @Override
+
     // called when the sink is initialized in the Flink job
     // sets up the output file and initializes the counters 
     public void open(Configuration parameters) throws Exception {
@@ -77,7 +77,7 @@ public class PerformanceReportingSink<T> extends SinkFunction<T>{
         }
     }
     
-    @Override
+
     // called when the sink is closed in the Flink job
     // it prints the final stats and closes the output file
     // it calculates the min, max, and average rates for each interval

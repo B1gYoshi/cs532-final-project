@@ -20,7 +20,7 @@ public class PerformanceMonitor<T> extends RichMapFunction<T, T> {
         this.interval = interval;
     }
     
-    @Override
+
     public void open(Configuration parameters) throws Exception {
         startTime = System.currentTimeMillis();
         lastReportTime = startTime;

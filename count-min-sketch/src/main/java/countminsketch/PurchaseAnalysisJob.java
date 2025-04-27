@@ -34,7 +34,8 @@ public class PurchaseAnalysisJob {
         final int M = 100;
         final int K = 5;
 
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        // Set up local execution environment with parallelism
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironment();
         env.setParallelism(NUM_CORES);
 
         DataStream<Purchase> purchases = env
