@@ -23,9 +23,8 @@ import java.util.stream.Collectors;
  * Skeleton code for the datastream walkthrough
  */
 
-// DetailedFraudDetectionJob class based off of original FraudDetectionJob from the Flink walkthrough
-// Modified class to use all new classes: DetailedTransaction, DetailedAlert, DetailedFraudDetector, and DetailedAlertSink
 
+ 
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
         final int NUM_CORES = 10;

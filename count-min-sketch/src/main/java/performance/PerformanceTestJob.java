@@ -18,9 +18,10 @@ import java.time.Duration;
 public class PerformanceTestJob {
     public static void main(String[] args) throws Exception {
         // settings for the test, command line args
-        String testName = args.length > 0 ? args[0] : "latency_test";// for later, when we have multiple tests
-        int reportInterval = args.length > 1 ? Integer.parseInt(args[1]) : 1000; //for printing
-        int testSeconds = args.length > 2 ? Integer.parseInt(args[2]) : 60; // total runtime of test
+        
+        // String testName = args.length > 0 ? args[0] : "latency_test";// for later, when we have multiple tests
+        // int reportInterval = args.length > 1 ? Integer.parseInt(args[1]) : 1000; //for printing
+        // int testSeconds = args.length > 2 ? Integer.parseInt(args[2]) : 60; // total runtime of test
 
         String testName = "test_1";
         int reportInterval = 1000;
