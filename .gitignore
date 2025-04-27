@@ -2,3 +2,4 @@ PerformanceTestRunner.java
 # .gitignore
 .DS_Store
 .idea/
+.vscode/

@@ -1,7 +1,8 @@
 package performance;
 
 import org.apache.flink.configuration.Configuration;
-import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
+//problematic:
+import org.apache.flink.streaming.api.functions.sink.legacy.SinkFunction;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * sink for performance metrics.
  */
-public class PerformanceReportingSink<T> extends RichSinkFunction<T> {
+public class PerformanceReportingSink<T> extends SinkFunction<T>{
     
     private String testName;
     private String outputFile;
@@ -35,7 +36,7 @@ public class PerformanceReportingSink<T> extends RichSinkFunction<T> {
     @Override
     // called when the sink is initialized in the Flink job
     // sets up the output file and initializes the counters 
-    public void open(Configuration parameters) {
+    public void open(Configuration parameters) throws Exception {
         count = 0;
         startTime = System.currentTimeMillis();
         lastReportTime = startTime;
@@ -51,7 +52,7 @@ public class PerformanceReportingSink<T> extends RichSinkFunction<T> {
     @Override
     // called for each element in stream. tracks the number of elements processed and time
     // it just counts the number of elements processed and reports the rate
-    public void invoke(T value, Context context) {
+    public void invoke(T value, Context context) throws Exception {
         count++;
         
         if (count % reportInterval == 0) {
@@ -80,7 +81,7 @@ public class PerformanceReportingSink<T> extends RichSinkFunction<T> {
     // called when the sink is closed in the Flink job
     // it prints the final stats and closes the output file
     // it calculates the min, max, and average rates for each interval
-    public void close() {
+    public void close() throws Exception {
         long endTime = System.currentTimeMillis();
         long totalTime = endTime - startTime;
         double overall = (1000.0 * count) / totalTime;

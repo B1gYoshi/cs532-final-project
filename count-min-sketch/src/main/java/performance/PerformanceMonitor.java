@@ -1,12 +1,12 @@
 package performance;
 
-// import org.apache.flink.api.common.functions.RichMapFunction;
+import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.configuration.Configuration;
 
 /**
  * monitor for pipeline throughput measurement.
  */
-public class PerformanceMonitor<T>{
+public class PerformanceMonitor<T> extends RichMapFunction<T, T> {
     
     private String point;
     private int interval;
@@ -21,15 +21,14 @@ public class PerformanceMonitor<T>{
     }
     
     @Override
-    public void open(Configuration parameters) {
+    public void open(Configuration parameters) throws Exception {
         startTime = System.currentTimeMillis();
         lastReportTime = startTime;
         count = 0;
     }
     
     @Override
-    // called for each element in stream. tracks the number of elements processed and time
-    public T map(T value) {
+    public T map(T value) throws Exception {
         count++;
         
         if (count % interval == 0) {
@@ -51,9 +50,9 @@ public class PerformanceMonitor<T>{
     }
     
     @Override
-    public void close() {
+    public void close() throws Exception {
         long totalTime = System.currentTimeMillis() - startTime;
-        double avg = count > 0 ? (1000.0 * count) / totalTime : 0; //average rate
+        double avg = count > 0 ? (1000.0 * count) / totalTime : 0;
         
         System.out.printf("[%s] FINAL: %d events in %.1f seconds (%.1f/s)%n", 
                 point, count, totalTime / 1000.0, avg);
