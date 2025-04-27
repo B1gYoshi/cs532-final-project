@@ -34,7 +34,7 @@ public class PerformanceReportingSink<T> extends RichSinkFunction<T> {
     
     @Override
     // called when the sink is initialized in the Flink job
-    // sets up the output file and initializes the counters
+    // sets up the output file and initializes the counters 
     public void open(Configuration parameters) {
         count = 0;
         startTime = System.currentTimeMillis();

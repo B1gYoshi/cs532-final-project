@@ -1,12 +1,12 @@
 package performance;
 
-import org.apache.flink.api.common.functions.RichMapFunction;
+// import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.configuration.Configuration;
 
 /**
  * monitor for pipeline throughput measurement.
  */
-public class PerformanceMonitor<T> extends RichMapFunction<T, T> {
+public class PerformanceMonitor<T>{
     
     private String point;
     private int interval;
@@ -40,6 +40,7 @@ public class PerformanceMonitor<T> extends RichMapFunction<T, T> {
             double recent = (1000.0 * interval) / timeElapsed;
             double overall = (1000.0 * count) / totalTime;
             
+            // point lists the stage in the pipeline
             System.out.printf("[%s] Count: %d | Recent: %.1f/s | Overall: %.1f/s | Time: %.1fs%n",
                     point, count, recent, overall, totalTime / 1000.0);
             

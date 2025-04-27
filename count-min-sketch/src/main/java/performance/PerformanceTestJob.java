@@ -20,7 +20,11 @@ public class PerformanceTestJob {
         // settings for the test, command line args
         String testName = args.length > 0 ? args[0] : "latency_test";// for later, when we have multiple tests
         int reportInterval = args.length > 1 ? Integer.parseInt(args[1]) : 1000; //for printing
-        int testSeconds = args.length > 2 ? Integer.parseInt(args[2]) : 60; // total amount of time for test
+        int testSeconds = args.length > 2 ? Integer.parseInt(args[2]) : 60; // total runtime of test
+
+        String testName = "test_1";
+        int reportInterval = 1000;
+        int testSeconds = 60;    
         
         // test parameters
         int CORES = 10;
@@ -75,7 +79,7 @@ public class PerformanceTestJob {
             final Thread mainThread = Thread.currentThread();
             new Thread(() -> {
                 Thread.sleep(testSeconds * 1000);
-                System.out.println("\nTime limit reached - stopping test...");
+                System.out.println("\nTime limit reached");
                 mainThread.interrupt();
 
             }).start();
