@@ -1,11 +1,12 @@
 package cms;
 
-import org.apache.flink.streaming.api.functions.windowing.ProcessAllWindowFunction;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import stream.Purchase;
 
-public class WindowCMS extends ProcessAllWindowFunction<Purchase, Sketch, TimeWindow> {
+public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, Sketch, Integer, TimeWindow> {
     private final int width;
     private final int depth;
     private final int maxHotKeys;
@@ -17,11 +18,11 @@ public class WindowCMS extends ProcessAllWindowFunction<Purchase, Sketch, TimeWi
     }
 
     @Override
-    public void process(Context context, Iterable<Purchase> elements, Collector<Sketch> collector) {
+    public void process(Integer key, Context context, Iterable<Tuple2<Integer, Purchase>> elements, Collector<Sketch> collector) {
         // Build sketch of purchases
         Sketch sketch = new Sketch(width, depth, maxHotKeys);
-        for (Purchase purchase : elements) {
-            sketch.update(purchase.getCategory());
+        for (Tuple2<Integer, Purchase> purchase : elements) {
+            sketch.update(purchase.f1.getCategory());
         }
 
         // Stamp and emit sketch
