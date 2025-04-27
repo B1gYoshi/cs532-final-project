@@ -80,6 +80,7 @@ class RandomKeySelector extends RichMapFunction<Purchase, Tuple2<Integer, Purcha
     }
 
 
+
     @Override
     public Tuple2<Integer, Purchase> map(Purchase purchase) throws Exception {
         return Tuple2.of(rand.nextInt(NUM_CORES), purchase);
