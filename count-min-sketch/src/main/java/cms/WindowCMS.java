@@ -6,7 +6,11 @@ import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import stream.Purchase;
 
-public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, Sketch, Integer, TimeWindow> {
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, WindowResult, Integer, TimeWindow> {
     private final int width;
     private final int depth;
     private final int maxHotKeys;
@@ -18,15 +22,29 @@ public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, 
     }
 
     @Override
-    public void process(Integer key, Context context, Iterable<Tuple2<Integer, Purchase>> elements, Collector<Sketch> collector) {
-        // Build sketch of purchases
-        Sketch sketch = new Sketch(width, depth, maxHotKeys);
+    public void process(Integer key, Context context, Iterable<Tuple2<Integer, Purchase>> elements, Collector<WindowResult> collector) {
+        // Build sketch and track hot keys
+        TreeSet<HotKey> hotKeys = new TreeSet<>();
+        Sketch sketch = new Sketch(width, depth);
+
         for (Tuple2<Integer, Purchase> purchase : elements) {
-            sketch.update(purchase.f1.getCategory());
+            String category = purchase.f1.getCategory();
+            int min = sketch.update(category);
+
+            // Update potential hot key
+            HotKey hotKey = new HotKey(category, min);
+            hotKeys.remove(hotKey);
+            hotKeys.add(hotKey);
+            if (hotKeys.size() > maxHotKeys) {
+                hotKeys.pollFirst();
+            }
         }
 
-        // Stamp and emit sketch
-        sketch.setStamp(context.window().getStart());
-        collector.collect(sketch);
+        // Emit sketch, hot keys, and window stamp
+        collector.collect(new WindowResult(
+            sketch,
+            new HashSet<>(hotKeys),
+            context.window().getStart()
+        ));
     }
 }

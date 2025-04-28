@@ -17,7 +17,7 @@ public class PurchaseSource implements SourceFunction<Purchase> {
             synchronized (context.getCheckpointLock()) {
                 context.collect(generator.next());
             }
-            Thread.sleep(100L);
+            Thread.sleep(10L);
         }
     }
 

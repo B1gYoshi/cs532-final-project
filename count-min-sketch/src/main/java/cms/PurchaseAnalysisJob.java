@@ -14,8 +14,8 @@ import java.util.List;
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
         final int NUM_CORES = 10;
-        final int WIDTH = 10;
-        final int DEPTH = 10;
+        final int WIDTH = 100;
+        final int DEPTH = 100;
         final int MAX_HOT_KEYS = 2;
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -25,7 +25,7 @@ public class PurchaseAnalysisJob {
             .addSource(new PurchaseSource())
             .name("purchases");
 
-        DataStream<Sketch> sketches = purchases
+        DataStream<WindowResult> sketches = purchases
             .map(new RandomKeySelector(NUM_CORES))
             .keyBy((KeySelector<Tuple2<Integer, Purchase>, Integer>) value -> value.f0)
             .window(SlidingProcessingTimeWindows.of(
@@ -36,9 +36,9 @@ public class PurchaseAnalysisJob {
             .name("cms");
 
         DataStream<List<HotKey>> topCategories = sketches
-            .keyBy(Sketch::getStamp)
+            .keyBy(WindowResult::getStamp)
             .window(TumblingProcessingTimeWindows.of(Duration.ofSeconds(5)))
-            .process(new Merger())
+            .process(new Merger(WIDTH, DEPTH))
             .name("merger");
 
         topCategories
