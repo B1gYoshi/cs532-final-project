@@ -1,7 +1,6 @@
 package cms;
 
 import org.apache.commons.codec.digest.MurmurHash3;
-import java.util.*;
 
 public class Sketch {
     private final int width;     // Length of estimate arrays

@@ -7,7 +7,6 @@ import org.apache.flink.util.Collector;
 import stream.Purchase;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, WindowResult, Integer, TimeWindow> {
