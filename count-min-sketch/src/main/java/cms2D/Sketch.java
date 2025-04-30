@@ -6,7 +6,6 @@ public class Sketch {
     private final int width;     // Length of estimate arrays
     private final int depth;     // Number of arrays and hash functions
     private long total;          // The total number of items seen
-    private final int[] seeds;
     private final int[][] sketch;
 
     public Sketch(int width, int depth) {
@@ -14,12 +13,6 @@ public class Sketch {
         this.depth = depth;
         this.total = 0;
         this.sketch = new int[depth][width];
-        this.seeds = new int[depth];
-
-        // Initialize static seeds
-        for (int i = 0; i < depth; i++) {
-            seeds[i] = i;
-        }
     }
 
     public int update(String key) {
@@ -28,7 +21,7 @@ public class Sketch {
 
         // Increment corresponding estimates and return new min
         for (int i = 0; i < depth; i++) {
-            int hash = MurmurHash3.hash32x86(bytes, 0, bytes.length, seeds[i]);
+            int hash = MurmurHash3.hash32x86(bytes, 0, bytes.length, i);
             int j = Math.floorMod(hash, width);
             sketch[i][j] += 1;
             min = Math.min(min, sketch[i][j]);
@@ -44,7 +37,7 @@ public class Sketch {
 
         // Return minimum among corresponding entries
         for (int i = 0; i < depth; i++) {
-            int hash = MurmurHash3.hash32x86(bytes, 0, bytes.length, seeds[i]);
+            int hash = MurmurHash3.hash32x86(bytes, 0, bytes.length, i);
             int j = Math.floorMod(hash, width);
             min = Math.min(min, sketch[i][j]);
         }

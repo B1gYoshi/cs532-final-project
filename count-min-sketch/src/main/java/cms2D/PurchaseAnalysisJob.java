@@ -14,8 +14,8 @@ import java.util.List;
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
         final int NUM_CORES = 10;
-        final int WIDTH = 100;
-        final int DEPTH = 100;
+        final int WIDTH = 10;
+        final int DEPTH = 5;
         final int MAX_HOT_KEYS = 2;
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
