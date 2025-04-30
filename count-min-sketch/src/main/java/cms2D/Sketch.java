@@ -1,4 +1,4 @@
-package cms;
+package cms2D;
 
 import org.apache.commons.codec.digest.MurmurHash3;
 

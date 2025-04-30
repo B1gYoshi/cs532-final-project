@@ -1,4 +1,4 @@
-package countminsketch;
+package cms1D;
 
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -11,13 +11,8 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import stream.Purchase;
 import stream.PurchaseSource;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.Duration;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Skeleton code for the datastream walkthrough

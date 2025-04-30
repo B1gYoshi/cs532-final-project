@@ -1,4 +1,4 @@
-package cms;
+package cms2D;
 
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -33,7 +33,7 @@ public class PurchaseAnalysisJob {
                 Duration.ofSeconds(5)
             ))
             .process(new WindowCMS(WIDTH, DEPTH, MAX_HOT_KEYS))
-            .name("cms");
+            .name("cms2D");
 
         DataStream<List<HotKey>> topCategories = sketches
             .keyBy(WindowResult::getStamp)

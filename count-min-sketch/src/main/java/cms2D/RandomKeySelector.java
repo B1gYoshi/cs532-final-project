@@ -1,4 +1,4 @@
-package cms;
+package cms2D;
 
 import org.apache.flink.api.common.functions.RichMapFunction;
 import org.apache.flink.api.java.tuple.Tuple2;

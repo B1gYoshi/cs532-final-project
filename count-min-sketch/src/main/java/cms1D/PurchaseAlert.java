@@ -1,4 +1,4 @@
-package countminsketch;
+package cms1D;
 
 import java.util.Objects;
 
