@@ -1,5 +1,6 @@
 package cms;
 
+import metrics.PurchaseMetricsCollector;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -21,9 +22,16 @@ public class PurchaseAnalysisJob {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(NUM_CORES);
 
+        // DataStream<Purchase> purchases = env
+        //     .addSource(new PurchaseSource())
+        //     .name("purchases");
+
         DataStream<Purchase> purchases = env
             .addSource(new PurchaseSource())
-            .name("purchases");
+            .name("transactions")
+            .map(new PurchaseMetricsCollector())
+            .name("metrics")
+            .disableChaining(); 
 
         DataStream<WindowResult> sketches = purchases
             .map(new RandomKeySelector(NUM_CORES))
