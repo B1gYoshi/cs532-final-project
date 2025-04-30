@@ -37,7 +37,7 @@ import metrics.PurchaseMetricsCollector;
 
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
-        final int NUM_CORES = 10;
+        final int NUM_CORES = 16;
         final int M = 100;
         final int K = 5;
 
