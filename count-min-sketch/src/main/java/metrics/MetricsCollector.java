@@ -9,8 +9,6 @@ import org.apache.flink.metrics.Meter;
 import org.apache.flink.metrics.MeterView;
 
 import java.io.Serializable;
-import org.apache.flink.streaming.api.operators.StreamingRuntimeContext;
-
 
 public class MetricsCollector<T> extends RichMapFunction<T, T> implements Serializable {
 
@@ -18,79 +16,72 @@ public class MetricsCollector<T> extends RichMapFunction<T, T> implements Serial
     private transient Counter counter;
     private transient Meter meter;
 
+    private transient long startTime = -1;
+    private transient long endTime = -1;
+    private transient long lastCheckpointTime = -1;
+    private static final long CHECKPOINT_INTERVAL = 100_000;
+
+    private static final long TOTAL_EVENTS = 10_000_000L;
+
     private transient SimpleWriter outputter;
 
     private transient RuntimeContext runtimeContext;
 
-    // private transient long TOTAL_EVENTS = 1e6; // 1 million
-
     @Override
     public void open(OpenContext context) throws Exception {
-
         this.runtimeContext = getRuntimeContext();
 
-        this.counter = getRuntimeContext().getMetricGroup().counter("numEvents");
-        this.meter = getRuntimeContext().getMetricGroup().meter("eventsPerSecond", new MeterView(60));
+        // counter and meter persist across parallel instances
+        this.counter = runtimeContext.getMetricGroup().counter("numEvents");
+        this.meter = runtimeContext.getMetricGroup().meter("eventsPerSecond", new MeterView(1));
 
-        //optional: log to file, metrics should be in dashboard
-        outputter = new SimpleWriter("metrics.log");
+        int totalCores = runtimeContext.getTaskInfo().getNumberOfParallelSubtasks();
+        outputter = new SimpleWriter(String.format("metrics-logs/metrics-%d-cores.csv", totalCores));
+        
+        int coreId = runtimeContext.getTaskInfo().getIndexOfThisSubtask();
+        if (coreId == 0) {
+            outputter.log("Core_ID,Events,EPS");
+        }
 
-
+        meter.markEvent();
+        lastCheckpointTime = System.currentTimeMillis();
+        startTime = lastCheckpointTime;
     }
 
     @Override
     public T map(T value) throws Exception {
-        if (counter == null) {
-            // doesn't normally run
-            this.counter = getRuntimeContext().getMetricGroup().counter("numEvents");
-            this.meter = getRuntimeContext().getMetricGroup().meter("eventsPerSecond", new MeterView(60));
-        }
         counter.inc();
-        meter.markEvent();
 
-        // i think count is shared across all cores
         long count = counter.getCount();
+        int coreId = runtimeContext.getTaskInfo().getIndexOfThisSubtask();
 
-        // not sure why but this is the only way to get coreID
-        TaskInfo taskInfo = runtimeContext.getTaskInfo();
-        int coreId = taskInfo.getIndexOfThisSubtask();
+        if (count % CHECKPOINT_INTERVAL == 0) {
+            long now = System.currentTimeMillis();
+            long elapsedMillis = now - lastCheckpointTime;
 
-        coreId = runtimeContext.getTaskInfo().getIndexOfThisSubtask();
+            if (elapsedMillis > 0) {
+                double eps = (CHECKPOINT_INTERVAL * 1000.0) / elapsedMillis;
+                outputter.log(String.format("%d,%d,%.2f", coreId, count, eps));
 
+                if (coreId == 0) {
+                    System.out.printf("Core: %d, Events: %d, EPS: %.2f\n", coreId, count, eps);
+                }
+            }
 
-
-
-        //every 10 events, print count and rate (for every core)
-        if (counter.getCount() % 10 == 0) {
-            System.out.printf("Core: %d, Events: %d, EPS: %.2f", coreId, counter.getCount(), meter.getRate());
-
-
-            // outputter.log(String.format("Events: %d, EPS: %.2f", count, meter.getRate()));
-            outputter.log(String.format("Core: %d, Events: %d, EPS: %.2f", coreId, counter.getCount(), meter.getRate()));
+            lastCheckpointTime = now;
         }
 
-
-        //no point if no coreID:
-
-        // if (count == 0) {
-        //     startTime = System.currentTimeMillis();
-        // } else if (count == TOTAL_EVENTS) {
-        //     endTime = System.currentTimeMillis();
-        //     long duration = endTime - startTime;
-        //     System.out.printf("Processed 1,000,000 events in %d ms%n", duration);
-        // }
-
-
-
-        //latency tracking: requires timestamp in Purchase Object TODO
-        // long now = System.currentTimeMillis();
-        // long latency = now - value.getTimestamp();
-        // latencies.add(latency);
         return value;
     }
 
     @Override
     public void close() throws Exception {
+
+        endTime = System.currentTimeMillis();
+        long duration = endTime - startTime;
+        int coreId = runtimeContext.getTaskInfo().getIndexOfThisSubtask();
+
+        outputter.log(String.format("%d,FINISH,%dms", coreId, duration));
         outputter.close();
     }
 }

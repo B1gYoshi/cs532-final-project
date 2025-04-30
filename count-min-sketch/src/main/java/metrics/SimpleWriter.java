@@ -9,10 +9,10 @@ public class SimpleWriter {
     private final PrintWriter writer;
 
     public SimpleWriter(String filename) throws IOException {
-        this.writer = new PrintWriter(new FileWriter(filename, true)); // append mode
+        this.writer = new PrintWriter(new FileWriter(filename, true)); // true is append mode
     }
 
-    public void log(String message) {
+    public synchronized void log(String message) {
         writer.println(message);
         writer.flush();
     }
