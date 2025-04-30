@@ -1,7 +1,6 @@
 package countminsketch;
 
 import org.apache.flink.api.common.functions.RichMapFunction;
-
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -9,9 +8,6 @@ import org.apache.flink.streaming.api.functions.sink.legacy.SinkFunction;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.api.java.tuple.Tuple2;
-
-// import stream.Purchase;
-// import stream.PurchaseSource;
 import stream.Purchase;
 import stream.PurchaseSource;
 
@@ -22,11 +18,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-import metrics.MetricsCollector;
-import metrics.PurchaseMetricsCollector;
-
-
 
 /**
  * Skeleton code for the datastream walkthrough
@@ -47,10 +38,7 @@ public class PurchaseAnalysisJob {
 
         DataStream<Purchase> purchases = env
                 .addSource(new PurchaseSource())
-                .name("transactions")
-                .map(new PurchaseMetricsCollector())
-                .name("metrics")
-                .disableChaining();   
+                .name("transactions");
 
         DataStream<CMSResult> cmsOutputs = purchases
                 .map(new RandomKeySelector(NUM_CORES))
