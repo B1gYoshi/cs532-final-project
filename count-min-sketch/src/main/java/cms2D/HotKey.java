@@ -1,6 +1,7 @@
 package cms2D;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class HotKey implements Comparable<HotKey> {
     private String key;
@@ -41,7 +42,7 @@ public class HotKey implements Comparable<HotKey> {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
             .append("key", key)
             .append("estimate", estimate)
             .toString();
