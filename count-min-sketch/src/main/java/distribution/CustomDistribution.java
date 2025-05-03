@@ -7,13 +7,16 @@ import java.net.URL;
 import java.util.*;
 
 public class CustomDistribution implements Distribution<String> {
+    // Configure to desired weights file
+    private final String WEIGHTS_FILE = "/weights.yaml";
+
     private final List<String> implicit;
     private final HashMap<String, Double> explicit;
     private final Random random;
 
     public CustomDistribution(Collection<String> domain) throws Exception {
         // Load file with custom weights
-        URL weightsUrl = getClass().getResource("/weights.yaml");
+        URL weightsUrl = getClass().getResource(WEIGHTS_FILE);
         if (weightsUrl == null) {
             throw new IOException("Missing weights.yaml in resources folder");
         }

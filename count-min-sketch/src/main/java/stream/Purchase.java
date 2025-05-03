@@ -16,12 +16,15 @@ public class Purchase {
     @CsvCustomBindByName(column = "Category", converter = CategoryConverter.class)
     private String category;
 
+    private long timeCreated;
+
     public Purchase() {}
 
     public Purchase(String productId, String productName, String category) {
         this.productId = productId;
         this.productName = productName;
         this.category = category;
+        this.timeCreated = System.nanoTime();
     }
 
     public String getProductId() {
@@ -46,6 +49,10 @@ public class Purchase {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public long getTimeCreated() {
+        return timeCreated;
     }
 
     public Purchase copy() {

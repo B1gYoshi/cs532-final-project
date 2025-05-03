@@ -37,6 +37,6 @@ public class PurchaseGenerator implements Serializable {
     public Purchase next() {
         String category = categoryDist.sample();
         List<Purchase> group = groups.get(category);
-        return group.get(random.nextInt(group.size()));
+        return group.get(random.nextInt(group.size())).copy();
     }
 }
