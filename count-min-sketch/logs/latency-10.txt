@@ -1,0 +1,8 @@
+10:04:34,615 WARN  org.apache.flink.runtime.security.token.DefaultDelegationTokenManager [] - No tokens obtained so skipping notifications
+10:04:34,883 WARN  org.apache.flink.runtime.webmonitor.WebMonitorUtils          [] - Log file environment variable 'log.file' is not set.
+10:04:34,884 WARN  org.apache.flink.runtime.webmonitor.WebMonitorUtils          [] - JobManager log files are unavailable in the web dashboard. Log file location not found in environment variable 'log.file' or configuration key 'web.log.path'.
+10:04:35,026 WARN  org.apache.flink.runtime.security.token.DefaultDelegationTokenManager [] - No tokens obtained so skipping notifications
+10:04:35,026 WARN  org.apache.flink.runtime.security.token.DefaultDelegationTokenManager [] - Tokens update task not started because either no tokens obtained or none of the tokens specified its renewal date
+[[key=Printers,estimate=582], [key=Webcams,estimate=529]]
+[[key=Printers,estimate=1462], [key=Webcams,estimate=1312]]
+[[key=Printers,estimate=1461], [key=Webcams,estimate=1341]]

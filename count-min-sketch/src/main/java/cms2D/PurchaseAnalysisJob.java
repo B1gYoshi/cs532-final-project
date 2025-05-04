@@ -27,8 +27,8 @@ public class PurchaseAnalysisJob {
 
         DataStream<WindowResult> sketches = purchases
             .map(new RandomKeySelector(NUM_CORES))
-            .keyBy((KeySelector<Tuple2<Integer, Purchase>, Integer>) value -> value.f0)
-            .window(SlidingProcessingTimeWindows.of(
+            .keyBy(value -> value.f0)
+            .window(TumblingProcessingTimeWindows.of(
                 Duration.ofSeconds(10),
                 Duration.ofSeconds(5)
             ))
