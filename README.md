@@ -1,5 +1,6 @@
 # cs532-final-project
 
+<<<<<<< HEAD
 ## Usage
 
 We developed on IntelliJ Community Edition and thus are providing the instructions for the setup we used to run the programs on IntelliJ. 
@@ -23,3 +24,18 @@ To estimate frequent items in the stream, we implemented the [count-min sketch](
 To achieve a distributed CMS, incoming items are randomly distributed across `NUM_CORES` workers using a `RandomKeySelector`. Workers run the `WindowCMS` process, which creates and updates a local `Sketch` object. After a set time interval, the workers submit their local sketches to a global coordinator running the `Merger` process. Sketches are merged by simply adding corresponding entries. 
 
 Assuming the number of categories can be arbitrarily large, it would be costly to extract estimates for every category from a merged CMS. Instead, our solution has each worker maintain a size-limited `TreeSet`, which stores the top `MAX_HOT_KEYS` categories with the largest local estimates in `HotKey` objects. `TreeSet` was chosen since it supports item insertion and deletion in logarithmic time. Workers emit these categories along with their sketches. The coordinator then uses this reduced set on the merged CMS to determine frequent categories, significantly improving performance. This works because purchases are distributed randomly across the workers, which preserves relative frequencies in expectation. For instance, if there are 5 workers and a stream of 75 printers and 25 webcams,  each worker is expected to receive 15 printers and 5 webcams.  Thus, if printers are globally popular, they’re expected to be locally popular and likely represented in a `HotKey` emitted by a worker
+=======
+## Description
+
+
+## Metrics to implement
+- Thread count/ number of running jobs
+- Status.JVM.CPU                Load    Time
+- - measured at start
+- Memory: Status.Flink.Memory   Used    Total
+- - 
+- Threads: Status.JVM.Threads   Count
+- Job Manager: State (running or not) and time
+
+To measure time: Status.JVM.CPU
+>>>>>>> yan

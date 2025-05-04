@@ -23,10 +23,11 @@ import java.util.Random;
 
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
-        final int NUM_CORES = 10;
+        final int NUM_CORES = 16;
         final int M = 100;
         final int K = 5;
 
+        // Set up local execution environment with parallelism
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(NUM_CORES);
 
