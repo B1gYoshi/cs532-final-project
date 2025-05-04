@@ -40,7 +40,7 @@ public class MetricsCollector<T> extends RichMapFunction<T, T> implements Serial
         
         int coreId = runtimeContext.getTaskInfo().getIndexOfThisSubtask();
         if (coreId == 0) {
-            outputter.log("Core_ID,Events,EPS");
+            outputter.log("Core_ID,Events,EPS,time");
         }
 
         meter.markEvent();
@@ -61,10 +61,12 @@ public class MetricsCollector<T> extends RichMapFunction<T, T> implements Serial
 
             if (elapsedMillis > 0) {
                 double eps = (CHECKPOINT_INTERVAL * 1000.0) / elapsedMillis;
-                outputter.log(String.format("%d,%d,%.2f", coreId, count, eps));
+                long timeElapsed = now - startTime;
+
+                outputter.log(String.format("%d,%d,%.2f,%d", coreId, count, eps, timeElapsed));
 
                 if (coreId == 0) {
-                    System.out.printf("Core: %d, Events: %d, EPS: %.2f\n", coreId, count, eps);
+                    System.out.printf("Core: %d, Events: %d, EPS: %.2f, Time: %d\n", coreId, count, eps, timeElapsed);
                 }
             }
 

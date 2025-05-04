@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
-        final int NUM_CORES = 28;
+        final int NUM_CORES = 17;
         final int WIDTH = 100;
         final int DEPTH = 100;
         final int MAX_HOT_KEYS = 2;
