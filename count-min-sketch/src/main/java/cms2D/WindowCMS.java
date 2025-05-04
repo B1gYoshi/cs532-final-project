@@ -5,7 +5,6 @@ import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import stream.Purchase;
-import java.util.HashSet;
 import java.util.TreeSet;
 
 public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, WindowResult, Integer, TimeWindow> {
@@ -39,10 +38,6 @@ public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, 
         }
 
         // Emit sketch, hot keys, and window stamp
-        collector.collect(new WindowResult(
-            sketch,
-            new HashSet<>(hotKeys),
-            context.window().getStart()
-        ));
+        collector.collect(new WindowResult(sketch, hotKeys, context.window().getStart()));
     }
 }
