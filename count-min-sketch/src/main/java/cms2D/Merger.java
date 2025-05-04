@@ -15,12 +15,12 @@ public class Merger extends ProcessWindowFunction<WindowResult, List<HotKey>, Lo
     }
 
     @Override
-    public void process(Long key, Context context, Iterable<WindowResult> sketches, Collector<List<HotKey>> collector) {
+    public void process(Long key, Context context, Iterable<WindowResult> results, Collector<List<HotKey>> collector) {
         Map<String, HotKey> map = new HashMap<>();
         Sketch merged = new Sketch(width, depth);
 
         // Merge hot keys and sketches
-        for (WindowResult result : sketches) {
+        for (WindowResult result : results) {
             merged.merge(result.getSketch());
             for (HotKey hotKey : result.getHotKeys()) {
                 map.put(hotKey.getKey(), hotKey);

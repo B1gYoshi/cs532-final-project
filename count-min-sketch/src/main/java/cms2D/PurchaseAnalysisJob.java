@@ -1,10 +1,7 @@
 package cms2D;
 
-import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import stream.Purchase;
 import stream.PurchaseSource;
@@ -13,7 +10,7 @@ import java.util.List;
 
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
-        final int NUM_CORES = 10;
+        final int NUM_CORES = 1;
         final int WIDTH = 10;
         final int DEPTH = 5;
         final int MAX_HOT_KEYS = 2;
@@ -27,17 +24,14 @@ public class PurchaseAnalysisJob {
 
         DataStream<WindowResult> sketches = purchases
             .map(new RandomKeySelector(NUM_CORES))
-            .keyBy((KeySelector<Tuple2<Integer, Purchase>, Integer>) value -> value.f0)
-            .window(SlidingProcessingTimeWindows.of(
-                Duration.ofSeconds(10),
-                Duration.ofSeconds(5)
-            ))
-            .process(new WindowCMS(WIDTH, DEPTH, MAX_HOT_KEYS))
+            .keyBy(value -> value.f0)
+            .window(TumblingProcessingTimeWindows.of(Duration.ofSeconds(10)))
+            .aggregate(new AggregateCMS(WIDTH, DEPTH, MAX_HOT_KEYS), new Stamper())
             .name("cms2D");
 
         DataStream<List<HotKey>> topCategories = sketches
             .keyBy(WindowResult::getStamp)
-            .window(TumblingProcessingTimeWindows.of(Duration.ofSeconds(5)))
+            .window(TumblingProcessingTimeWindows.of(Duration.ofSeconds(10)))
             .process(new Merger(WIDTH, DEPTH))
             .name("merger");
 

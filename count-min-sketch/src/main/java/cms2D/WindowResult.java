@@ -1,27 +1,31 @@
 package cms2D;
 
-import java.util.Set;
+import java.util.TreeSet;
 
 public class WindowResult {
-    private Sketch sketch;
-    private Set<HotKey> hotKeys;
+    private final Sketch sketch;
+    private final TreeSet<HotKey> hotKeys;
     private long stamp;
+    private long total;
 
-    public WindowResult(Sketch sketch, Set<HotKey> hotKeys, long stamp) {
+    public WindowResult(Sketch sketch, TreeSet<HotKey> hotKeys) {
         this.sketch = sketch;
         this.hotKeys = hotKeys;
-        this.stamp = stamp;
     }
 
     public Sketch getSketch() {
         return sketch;
     }
 
-    public Set<HotKey> getHotKeys() {
+    public TreeSet<HotKey> getHotKeys() {
         return hotKeys;
     }
 
     public long getStamp() {
         return stamp;
+    }
+
+    public void setStamp(long stamp) {
+        this.stamp = stamp;
     }
 }

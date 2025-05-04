@@ -5,13 +5,11 @@ import org.apache.commons.codec.digest.MurmurHash3;
 public class Sketch {
     private final int width;     // Length of estimate arrays
     private final int depth;     // Number of arrays and hash functions
-    private long total;          // The total number of items seen
     private final int[][] sketch;
 
     public Sketch(int width, int depth) {
         this.width = width;
         this.depth = depth;
-        this.total = 0;
         this.sketch = new int[depth][width];
     }
 
@@ -26,8 +24,6 @@ public class Sketch {
             sketch[i][j] += 1;
             min = Math.min(min, sketch[i][j]);
         }
-
-        total++;
         return min;
     }
 
@@ -51,9 +47,5 @@ public class Sketch {
                 sketch[i][j] += other.sketch[i][j];
             }
         }
-    }
-
-    public long getTotal() {
-        return total;
     }
 }
