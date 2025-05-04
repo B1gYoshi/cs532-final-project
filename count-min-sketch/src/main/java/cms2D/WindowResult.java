@@ -3,9 +3,9 @@ package cms2D;
 import java.util.Set;
 
 public class WindowResult {
-    private Sketch sketch;
-    private Set<HotKey> hotKeys;
-    private long stamp;
+    private final Sketch sketch;
+    private final Set<HotKey> hotKeys;
+    private final long stamp;
 
     public WindowResult(Sketch sketch, Set<HotKey> hotKeys, long stamp) {
         this.sketch = sketch;

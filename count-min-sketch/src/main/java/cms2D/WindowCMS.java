@@ -5,9 +5,6 @@ import org.apache.flink.streaming.api.functions.windowing.ProcessWindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import stream.Purchase;
-
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.TreeSet;
 
@@ -23,13 +20,13 @@ public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, 
     }
 
     @Override
-    public void process(Integer key, Context context, Iterable<Tuple2<Integer, Purchase>> elements, Collector<WindowResult> collector) {
+    public void process(Integer key, Context context, Iterable<Tuple2<Integer, Purchase>> tuples, Collector<WindowResult> collector) {
         // Build sketch and track hot keys
         TreeSet<HotKey> hotKeys = new TreeSet<>();
         Sketch sketch = new Sketch(width, depth);
 
-        for (Tuple2<Integer, Purchase> purchase : elements) {
-            String category = purchase.f1.getCategory();
+        for (Tuple2<Integer, Purchase> tuple : tuples) {
+            String category = tuple.f1.getCategory();
             int min = sketch.update(category);
 
             // Update potential hot key
@@ -39,8 +36,6 @@ public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, 
             if (hotKeys.size() > maxHotKeys) {
                 hotKeys.pollFirst();
             }
-
-            // logLatency(purchase.f1);
         }
 
         // Emit sketch, hot keys, and window stamp
@@ -49,14 +44,5 @@ public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, 
             new HashSet<>(hotKeys),
             context.window().getStart()
         ));
-    }
-
-    private void logLatency(Purchase purchase) {
-        try (PrintWriter out = new PrintWriter(new FileWriter("logs/latency.txt", true))) {
-            out.println(System.nanoTime() - purchase.getTimeCreated());
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

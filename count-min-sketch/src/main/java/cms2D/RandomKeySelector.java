@@ -7,15 +7,15 @@ import java.util.Random;
 
 public class RandomKeySelector extends RichMapFunction<Purchase, Tuple2<Integer, Purchase>> {
     private final int NUM_CORES;
-    private Random rand;
+    private Random random;
 
     public RandomKeySelector (int NUM_CORES) {
         this.NUM_CORES = NUM_CORES;
-        rand = new Random();
+        random = new Random();
     }
 
     @Override
     public Tuple2<Integer, Purchase> map(Purchase purchase) throws Exception {
-        return Tuple2.of(rand.nextInt(NUM_CORES), purchase);
+        return Tuple2.of(random.nextInt(NUM_CORES), purchase);
     }
 }
