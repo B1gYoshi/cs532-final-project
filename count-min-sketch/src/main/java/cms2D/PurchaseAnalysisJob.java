@@ -1,8 +1,6 @@
 package cms2D;
 
 import metrics.PurchaseMetricsCollector;
-import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
@@ -22,16 +20,19 @@ public class PurchaseAnalysisJob {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(NUM_CORES);
 
-        // DataStream<Purchase> purchases = env
-        //     .addSource(new PurchaseSource())
-        //     .name("purchases");
+        DataStream<Purchase> purchases = env
+            .addSource(new PurchaseSource())
+            .name("purchases");
 
+        // Record metrics during run
+        /*
         DataStream<Purchase> purchases = env
             .addSource(new PurchaseSource())
             .name("transactions")
             .map(new PurchaseMetricsCollector())
             .name("metrics")
-            .disableChaining(); 
+            .disableChaining();
+         */
 
         DataStream<WindowResult> sketches = purchases
             .map(new RandomKeySelector(NUM_CORES))
