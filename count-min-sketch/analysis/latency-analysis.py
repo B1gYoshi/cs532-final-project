@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-files = sorted(glob.glob("latency*"))
+files = sorted(glob.glob("../logs/latency*"))
 input_rate = []
 mean_latencies = []
 top_latencies = []
