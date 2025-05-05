@@ -17,7 +17,6 @@ public class PurchaseSource implements SourceFunction<Purchase> {
             synchronized (context.getCheckpointLock()) {
                 context.collect(generator.next());
             }
-<<<<<<< HEAD
 
             // Rate-limit
             Thread.sleep(1L);
@@ -27,10 +26,6 @@ public class PurchaseSource implements SourceFunction<Purchase> {
             long start = System.nanoTime();
             while (start + 100_000 >= System.nanoTime());
             */
-=======
-            // Thread.sleep(10L);//rate limiting
-            count++;
->>>>>>> yan
         }
 
         running = false;

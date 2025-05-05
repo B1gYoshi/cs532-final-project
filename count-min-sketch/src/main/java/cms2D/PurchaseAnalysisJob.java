@@ -14,15 +14,9 @@ import java.util.List;
 
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
-<<<<<<< HEAD:count-min-sketch/src/main/java/cms2D/PurchaseAnalysisJob.java
         final int NUM_CORES = 10;
         final int WIDTH = 10;
         final int DEPTH = 5;
-=======
-        final int NUM_CORES = 17;
-        final int WIDTH = 100;
-        final int DEPTH = 100;
->>>>>>> yan:count-min-sketch/src/main/java/cms/PurchaseAnalysisJob.java
         final int MAX_HOT_KEYS = 2;
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
