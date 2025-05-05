@@ -37,7 +37,7 @@ public class PurchaseAnalysisJob {
         DataStream<WindowResult> sketches = purchases
             .map(new RandomKeySelector(NUM_CORES))
             .keyBy(value -> value.f0)
-            .window(TumblingProcessingTimeWindows.of(
+            .window(SlidingProcessingTimeWindows.of(
                 Duration.ofSeconds(10),
                 Duration.ofSeconds(5)
             ))
