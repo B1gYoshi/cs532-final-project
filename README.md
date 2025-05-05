@@ -2,7 +2,7 @@
 
 ## Usage
 
-`cms2D/ProjectAnalysisJob.java` runs the final implementation which uses multi-dimensional sketches and category pruning. To run the job, right click the file in IntelliJ and click `Run PurchaseAnalysisJob main()` option. If this doesn't work go to the configurations and select:
+`cms2D/ProjectAnalysisJob` runs the final implementation which uses multi-dimensional sketches and category pruning. To run the job, right click the file in IntelliJ and click `Run PurchaseAnalysisJob main()` option. If this doesn't work go to the configurations and select:
 
     Add dependencies with "provided" scope to classpath 
 
@@ -11,7 +11,7 @@ Also, enable the `Add VM Options` and add the following to the field created:
     --add-opens=java.base/java.util=ALL-UNNAMED
 
 
-Inside `cms2D/ProjectAnalysisJob.java`, configure the following variables:
+Inside `cms2D/ProjectAnalysisJob`, configure the following variables:
 ```java
 final int NUM_CORES = 10;       // Level of parallelism
 final int WIDTH = 10;           // Length of the rows in each sketch
@@ -19,7 +19,7 @@ final int DEPTH = 5;            // Number of rows in each sketch
 final int MAX_HOT_KEYS = 2;     // Size limit for local top categories set
 ```
 
-Our prototype implementation can be ran with `cms1D/ProjectAnalysisJob.java`.
+Our prototype implementation can be ran with `cms1D/ProjectAnalysisJob`.
     
 ## Design Description
 
@@ -42,7 +42,7 @@ There are three test distributions included as YAML files in `resources`. To run
 3. `test3.yaml`: This file sets“Printers” to 60%, “Webcams” to 20%, and “Basic Cases” to 20%. 
 
 ## Experiments
-The `metrics` directory contains utility classes used to test our system's performance. To run the program with these utilities, inside `PurchaseJobSource`, define:
+The `metrics` directory contains utility classes used to test our system's performance. To run the program with these utilities, inside `cms2D/PurchaseAnalysisJob`, define:
 ```java
 // Record metrics during run
 DataStream<Purchase> purchases = env
@@ -53,4 +53,4 @@ DataStream<Purchase> purchases = env
     .disableChaining();
 ```
 
-Analysis scripts are included in `analysis`. 
+`stream/PurchaseSource` can be altered to tune the stream input rate, and a variable `MAX_EVENTS` is included for tests that required bounding the stream. Analysis scripts are included in `analysis`. 
