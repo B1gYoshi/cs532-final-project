@@ -1,16 +1,18 @@
-<<<<<<< HEAD
+C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\metrics\MetricsCollector.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms1D\PurchaseAnalysisJob.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\stream\Purchase.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\stream\PurchaseTestJob.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms1D\CMSResult.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms2D\Merger.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms2D\WindowCMS.java
+C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\metrics\PurchaseMetricsCollector.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\distribution\CustomDistribution.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms1D\CMSAnalysis.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms1D\CMSMerge.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms2D\Sketch.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms2D\PurchaseAnalysisJob.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms1D\PurchaseAlert.java
+C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\metrics\SimpleWriter.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\distribution\Distribution.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\stream\PurchaseGenerator.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms1D\CountMinSketch.java
@@ -20,40 +22,3 @@ C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cm
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\stream\PurchaseSource.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms1D\CMSMergedResult.java
 C:\Users\Eric\IdeaProjects\cs532-final-project\count-min-sketch\src\main\java\cms2D\HotKey.java
-=======
-<<<<<<< HEAD
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSAnalysis.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/PurchaseAlert.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/PurchaseAnalysisJob.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSResult.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSMerge.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/metrics/PurchaseMetricsCollector.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CountMinSketch.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/stream/PurchaseTestJob.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/stream/Purchase.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/metrics/MetricsCollector.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/stream/CategoryConverter.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/stream/PurchaseGenerator.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/stream/PurchaseSource.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSMergedResult.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/distribution/Distribution.java
-/Users/mcyanny/Desktop/school/532/cs532-final-project/count-min-sketch/src/main/java/distribution/CustomDistribution.java
-=======
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/stream/CategoryConverter.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/distribution/CustomDistribution.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/distribution/Distribution.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CountMinSketch.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/stream/PurchaseGenerator.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/PurchaseAnalysisJob.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/stream/Purchase.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/PurchaseAlert.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/Purchase.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSAnalysis.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSMerge.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/ManualPurchaseSource.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/stream/PurchaseTestJob.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSMergedResult.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/countminsketch/CMSResult.java
-/Users/neeljoshi/Desktop/CS532/cs532-final-project/count-min-sketch/src/main/java/stream/PurchaseSource.java
->>>>>>> adc3d6642ee0c88d572a817ec3f5fe2ac522bc1a
->>>>>>> yan

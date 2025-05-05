@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class RandomKeySelector extends RichMapFunction<Purchase, Tuple2<Integer, Purchase>> {
     private final int NUM_CORES;
-    private Random random;
+    private final Random random;
 
     public RandomKeySelector (int NUM_CORES) {
         this.NUM_CORES = NUM_CORES;

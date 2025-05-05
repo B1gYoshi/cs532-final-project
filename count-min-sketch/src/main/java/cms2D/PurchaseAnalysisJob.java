@@ -12,14 +12,15 @@ import java.util.List;
 
 public class PurchaseAnalysisJob {
     public static void main(String[] args) throws Exception {
-        final int NUM_CORES = 10;
-        final int WIDTH = 10;
-        final int DEPTH = 5;
-        final int MAX_HOT_KEYS = 2;
+        final int NUM_CORES = 10;       // Level of parallelism
+        final int WIDTH = 10;           // Length of the rows in each sketch
+        final int DEPTH = 5;            // Number of rows in each sketch
+        final int MAX_HOT_KEYS = 2;     // Size limit for local top categories set
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(NUM_CORES);
 
+        // Create the stream
         DataStream<Purchase> purchases = env
             .addSource(new PurchaseSource())
             .name("purchases");
@@ -34,6 +35,7 @@ public class PurchaseAnalysisJob {
             .disableChaining();
          */
 
+        // Run CMS algorithm on each worker over windows
         DataStream<WindowResult> sketches = purchases
             .map(new RandomKeySelector(NUM_CORES))
             .keyBy(value -> value.f0)
@@ -44,6 +46,7 @@ public class PurchaseAnalysisJob {
             .process(new WindowCMS(WIDTH, DEPTH, MAX_HOT_KEYS))
             .name("cms2D");
 
+        // Merge sketches and local popularity lists
         DataStream<List<HotKey>> topCategories = sketches
             .keyBy(WindowResult::getStamp)
             .window(TumblingProcessingTimeWindows.of(Duration.ofSeconds(5)))

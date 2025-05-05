@@ -18,16 +18,16 @@ public class PurchaseSource implements SourceFunction<Purchase> {
                 context.collect(generator.next());
             }
 
-            // Rate-limit
+            // Set rate limit
             Thread.sleep(1L);
 
-            // Busy wait for under 1 ms delay
-            /*
-            long start = System.nanoTime();
-            while (start + 100_000 >= System.nanoTime());
-            */
-        }
+            // Use busy wait for under 1 ms delay
+            // long start = System.nanoTime();
+            // while (start + 100_000 >= System.nanoTime());
 
+            // Limit items generated for experiments
+            // count++
+        }
         running = false;
     }
 

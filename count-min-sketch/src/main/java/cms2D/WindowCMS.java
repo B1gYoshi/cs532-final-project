@@ -20,12 +20,11 @@ public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, 
 
     @Override
     public void process(Integer key, Context context, Iterable<Tuple2<Integer, Purchase>> tuples, Collector<WindowResult> collector) {
-        long start = System.nanoTime();
-
         // Build sketch and track hot keys
         TreeSet<HotKey> hotKeys = new TreeSet<>();
         Sketch sketch = new Sketch(width, depth);
 
+        // Process stream
         for (Tuple2<Integer, Purchase> tuple : tuples) {
             String category = tuple.f1.getCategory();
             int min = sketch.update(category);
@@ -41,8 +40,5 @@ public class WindowCMS extends ProcessWindowFunction<Tuple2<Integer, Purchase>, 
 
         // Emit sketch, hot keys, and window stamp
         collector.collect(new WindowResult(sketch, hotKeys, context.window().getStart()));
-
-        // Record subtask processing time
-        // System.out.println(1.0 * (System.nanoTime() - start) / 1_000_000);
     }
 }
